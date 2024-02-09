@@ -8,7 +8,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <CurrentWeather />
-      {/* <UpcomingWeather /> */}
+      {/* <UpcomingWeather /  > */}
     </View>
   );
 }
