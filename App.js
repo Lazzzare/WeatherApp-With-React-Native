@@ -7,13 +7,12 @@ import * as Location from "expo-location";
 import { WEATHER_API_KEY } from "@env";
 
 export default function App() {
-  const { container } = styles;
+  const { container, loadingContainer } = styles;
   const [loading, setLoading] = useState(true);
-  const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
-  const [lat, setLat] = useState([]);
-  const [lon, setLon] = useState([]);
-  const [weather, setWeather] = useState([]);
+  const [lat, setLat] = useState(null);
+  const [lon, setLon] = useState(null);
+  const [weather, setWeather] = useState(null);
 
   const fetchWeatherData = async () => {
     try {
@@ -22,9 +21,8 @@ export default function App() {
       );
       const data = await res.json();
       setWeather(data);
-      setLoading(false);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       setError("Could not fetch weather data");
     } finally {
       setLoading(false);
@@ -32,24 +30,34 @@ export default function App() {
   };
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+    const fetchData = async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
 
-      if (status !== "granted") {
-        setError("permission to access location was denied");
-        return;
+        if (status !== "granted") {
+          setError("Permission to access location was denied");
+          setLoading(false);
+          return;
+        }
+
+        const location = await Location.getCurrentPositionAsync({});
+        setLat(location.coords.latitude);
+        setLon(location.coords.longitude);
+        await fetchWeatherData();
+      } catch (error) {
+        console.error(error);
+        setError("Error fetching location or weather data");
+        setLoading(false);
       }
-      let location = await Location.getCurrentPositionAsync({});
-      setLat(location.coords.latitude);
-      setLon(location.coords.longitude);
-      await fetchWeatherData();
-    })();
-  }, [lat, lon]);
+    };
+
+    fetchData();
+  }, []);
 
   if (loading) {
     return (
-      <View style={container}>
-        <ActivityIndicator size={"large"} color={"blue"} />
+      <View style={loadingContainer}>
+        <ActivityIndicator size="large" color="blue" />
       </View>
     );
   }
@@ -65,5 +73,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

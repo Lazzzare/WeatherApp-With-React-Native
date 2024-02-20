@@ -10,7 +10,6 @@ import {
 import { Feather } from "@expo/vector-icons";
 import ListItem from "../components/ListItem";
 import data from "../data/data";
-import Empty from "../components/EmptyList";
 
 const UpcomingWeather = () => {
   const renderItem = ({ item }) => {
@@ -25,7 +24,6 @@ const UpcomingWeather = () => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Upcoming Weather</Text>
       <ImageBackground
         source={require("../../assets/weather_image.jpg")}
         style={styles.image}
@@ -34,7 +32,6 @@ const UpcomingWeather = () => {
           data={data}
           renderItem={renderItem}
           keyExtractor={(item) => item.dt_text}
-          ListEmptyComponent={Empty}
         />
       </ImageBackground>
     </SafeAreaView>

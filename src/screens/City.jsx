@@ -16,8 +16,8 @@ const City = () => {
         source={require("../../assets/CityBackground.png")}
         style={styles.imageLayout}
       >
-        <Text style={[styles.cityName, styles.cityText]}>London</Text>
-        <Text style={[styles.countryName, styles.cityText]}>UK</Text>
+        <Text style={[styles.cityName, styles.cityText]}>Tbilisi</Text>
+        <Text style={[styles.countryName, styles.cityText]}>Tbili sea</Text>
         <View style={[styles.populationWrapper, styles.rowLayout]}>
           <IconText
             iconName={"user"}
